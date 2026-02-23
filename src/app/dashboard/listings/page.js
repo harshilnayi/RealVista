@@ -108,6 +108,13 @@ export default function MyListingsPage() {
                                     </span>
                                     <span className={styles.dateCell}>{timeAgo(listing.created_at)}</span>
                                     <div className={styles.actionsCell}>
+                                        <Link
+                                            href={`/properties/${listing.id}/edit`}
+                                            className={styles.actionBtn}
+                                            title="Edit"
+                                        >
+                                            <Edit size={16} />
+                                        </Link>
                                         <button
                                             className={styles.actionBtn}
                                             onClick={() => toggleStatus(listing.id, listing.status)}

@@ -8,7 +8,7 @@ import { formatPrice, formatArea, timeAgo, getPropertyTypeLabel, getStatusColor 
 import {
     MapPin, Bed, Bath, Maximize, Calendar, Eye, Heart, Share2,
     ChevronLeft, ChevronRight, Building2, User, Phone, Mail,
-    Send, X, Check, ArrowLeft, Bookmark, Home,
+    Send, X, Check, ArrowLeft, Bookmark, Home, Pencil,
 } from 'lucide-react';
 import styles from './page.module.css';
 
@@ -198,6 +198,11 @@ export default function PropertyDetailPage() {
                                     {property.listing_type === 'rent' && <span className={styles.perMonth}>/month</span>}
                                 </h2>
                                 <div className={styles.actions}>
+                                    {user && user.id === property.owner_id && (
+                                        <Link href={`/properties/${id}/edit`} className="btn btn-secondary">
+                                            <Pencil size={16} /> Edit
+                                        </Link>
+                                    )}
                                     <button
                                         className={`btn btn-secondary btn-icon ${isFav ? styles.favActive : ''}`}
                                         onClick={toggleFavorite}

@@ -1,6 +1,7 @@
 import './globals.css';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import { ToastProvider } from '@/components/ui/Toast';
 
 export const metadata = {
   title: 'RealVista - Find Your Dream Property',
@@ -18,9 +19,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <Navbar />
-        <main className="page">{children}</main>
-        <Footer />
+        <ToastProvider>
+          <Navbar />
+          <main className="page">{children}</main>
+          <Footer />
+        </ToastProvider>
       </body>
     </html>
   );

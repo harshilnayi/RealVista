@@ -90,7 +90,7 @@ export const DASHBOARD_LINKS = [
     { href: '/dashboard/listings', label: 'My Listings', icon: 'Building2', roles: ['seller', 'agent'] },
     { href: '/dashboard/favorites', label: 'Favorites', icon: 'Heart', roles: ['buyer'] },
     { href: '/dashboard/inquiries', label: 'Inquiries', icon: 'MessageSquare' },
-
+    { href: '/dashboard/settings', label: 'Settings', icon: 'Settings' },
 ];
 
 // Stats for landing page
