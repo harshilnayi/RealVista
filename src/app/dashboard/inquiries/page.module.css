@@ -1,0 +1,203 @@
+.inquiriesPage {
+    padding: var(--space-8) 0 var(--space-16);
+}
+
+.pageHeader {
+    margin-bottom: var(--space-6);
+}
+
+.pageTitle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-2xl);
+    font-weight: 800;
+}
+
+.pageSubtitle {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    margin-top: var(--space-1);
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: var(--space-1);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--space-1);
+    margin-bottom: var(--space-6);
+    width: fit-content;
+}
+
+.tab {
+    padding: var(--space-2) var(--space-5);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-muted);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+}
+
+.tab:hover {
+    color: var(--text-primary);
+}
+
+.tabActive {
+    background: var(--primary) !important;
+    color: white !important;
+}
+
+/* List */
+.inquiryList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.inquiryCard {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    transition: all var(--transition-fast);
+}
+
+.inquiryCard:hover {
+    box-shadow: var(--shadow-card);
+}
+
+.unread {
+    border-left: 3px solid var(--primary);
+}
+
+.inquiryHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.personInfo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    background: var(--gradient-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: white;
+    font-weight: 700;
+    font-size: var(--font-size-base);
+    flex-shrink: 0;
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.personName {
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.timeAgo {
+    font-size: var(--font-size-xs);
+    color: var(--text-dim);
+}
+
+.headerRight {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.propertyLink {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-sm);
+    color: var(--primary-light);
+    text-decoration: none;
+}
+
+.propertyLink:hover {
+    text-decoration: underline;
+}
+
+.message {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.contactInfo {
+    display: flex;
+    gap: var(--space-4);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--border-color);
+}
+
+.contactLink {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    text-decoration: none;
+}
+
+.contactLink:hover {
+    color: var(--primary-light);
+}
+
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-16);
+    text-align: center;
+    color: var(--text-dim);
+}
+
+.emptyState h3 {
+    font-size: var(--font-size-xl);
+    color: var(--text-secondary);
+}
+
+.emptyState p {
+    color: var(--text-muted);
+}
+
+@media (max-width: 768px) {
+    .inquiryHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-3);
+    }
+
+    .contactInfo {
+        flex-direction: column;
+        gap: var(--space-2);
+    }
+}

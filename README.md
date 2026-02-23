@@ -1,36 +1,115 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏠 RealVista — Smart Property Discovery Platform
 
-## Getting Started
+A modern, full-stack real estate web application built with **Next.js 14**, **Supabase**, and **Leaflet.js**. Features a stunning dark UI with glassmorphism effects, interactive maps, and comprehensive property management.
 
-First, run the development server:
+![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)
+![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?logo=supabase)
+![License](https://img.shields.io/badge/License-MIT-blue)
+
+---
+
+## ✨ Features
+
+- 🔐 **Authentication** — Email/password signup with role selection (Buyer, Seller, Agent)
+- 🏘️ **Property Listings** — Browse, search, filter, sort with grid/list view
+- 📝 **Add Property** — Multi-step form with image upload
+- 🗺️ **Interactive Map** — Leaflet.js map with property markers
+- 🧮 **EMI Calculator** — Real-time mortgage calculator with donut chart
+- 👥 **Agents Directory** — Find and contact agents/sellers
+- ❤️ **Favorites** — Save properties you love
+- 📊 **Dashboard** — Role-based dashboard with stats and quick actions
+- 📨 **Inquiries** — Send/receive property inquiries
+- 📱 **Responsive** — Works on desktop, tablet, and mobile
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Next.js 14, React 19, CSS Modules |
+| Backend | Supabase (Auth, PostgreSQL, Storage) |
+| Maps | Leaflet.js + OpenStreetMap |
+| Icons | Lucide React |
+| Deployment | Vercel |
+
+## 🚀 Quick Start
+
+### 1. Clone & Install
+
+```bash
+git clone https://github.com/harshilnayi/realvista.git
+cd realvista
+npm install
+```
+
+### 2. Supabase Setup
+
+1. Create a free project at [supabase.com](https://supabase.com)
+2. Copy your **Project URL** and **anon key** from Settings → API
+3. Create `.env.local`:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+```
+
+4. Run the SQL schema in Supabase SQL Editor:
+
+```bash
+# Copy contents of supabase/schema.sql and run in Supabase Dashboard → SQL Editor
+```
+
+### 3. Run
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 📁 Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+realvista/
+├── src/
+│   ├── app/                  # Next.js App Router pages
+│   │   ├── about/            # About page
+│   │   ├── agents/           # Agents directory
+│   │   ├── calculator/       # EMI Calculator
+│   │   ├── dashboard/        # User dashboard
+│   │   │   ├── favorites/    # Saved properties
+│   │   │   ├── inquiries/    # Messages
+│   │   │   └── listings/     # My properties
+│   │   ├── login/            # Login page
+│   │   ├── map/              # Interactive map
+│   │   ├── properties/       # Property browse & detail
+│   │   │   ├── [id]/         # Property detail page
+│   │   │   └── new/          # Add property form
+│   │   └── register/         # Registration page
+│   ├── components/           # Reusable components
+│   │   └── layout/           # Navbar, Footer
+│   └── lib/                  # Utilities, configs
+│       ├── supabase/         # Supabase client/server
+│       ├── constants.js      # App constants
+│       └── utils.js          # Helper functions
+├── supabase/
+│   └── schema.sql            # Database schema
+└── public/                   # Static assets
+```
 
-## Learn More
+## 📊 Database Schema
 
-To learn more about Next.js, take a look at the following resources:
+- **profiles** — User profiles with roles
+- **properties** — Property listings
+- **property_images** — Property photos
+- **favorites** — Saved properties
+- **inquiries** — User-to-user messages
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+All tables have Row Level Security (RLS) enabled.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📄 License
 
-## Deploy on Vercel
+MIT License — feel free to use for your own projects!
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Built with ❤️ as a Final Year Project

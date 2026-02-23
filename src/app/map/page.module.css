@@ -1,0 +1,164 @@
+.mapPage {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - var(--navbar-height));
+}
+
+.mapHeader {
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+}
+
+.headerContent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.pageTitle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-xl);
+    font-weight: 800;
+}
+
+.subtitle {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.mapWrapper {
+    flex: 1;
+    position: relative;
+    min-height: 500px;
+}
+
+.mapContainer {
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.mapLoading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-4);
+    z-index: 2;
+    background: var(--bg-primary);
+    color: var(--text-muted);
+}
+
+.mapLoading h3 {
+    color: var(--text-secondary);
+}
+
+/* Property Sidebar */
+.propertySidebar {
+    position: fixed;
+    bottom: var(--space-6);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    width: 380px;
+    max-width: 90vw;
+    animation: fadeInUp 0.3s ease;
+}
+
+.sidebarClose {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    border-radius: var(--radius-full);
+    color: white;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.sidebarCard {
+    display: block;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    text-decoration: none;
+    box-shadow: var(--shadow-xl);
+    transition: transform var(--transition-fast);
+}
+
+.sidebarCard:hover {
+    transform: translateY(-2px);
+}
+
+.sidebarImg {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.sidebarInfo {
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.sidebarPrice {
+    font-size: var(--font-size-lg);
+    font-weight: 800;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.sidebarInfo h4 {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.sidebarInfo p {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+}
+
+.sidebarSpecs {
+    display: flex;
+    gap: var(--space-4);
+    margin-top: var(--space-2);
+}
+
+.sidebarSpecs span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--font-size-xs);
+    color: var(--text-dim);
+}
+
+.viewLink {
+    font-size: var(--font-size-sm);
+    color: var(--primary-light);
+    font-weight: 600;
+    margin-top: var(--space-2);
+}

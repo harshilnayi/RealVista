@@ -1,0 +1,269 @@
+.newPropertyPage {
+    padding: var(--space-8) 0 var(--space-16);
+}
+
+.formContainer {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.formHeader {
+    text-align: center;
+    margin-bottom: var(--space-10);
+}
+
+.formTitle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    font-size: var(--font-size-2xl);
+    font-weight: 800;
+    color: var(--primary-light);
+    margin-bottom: var(--space-2);
+}
+
+.formSubtitle {
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+}
+
+/* Progress */
+.progress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-10);
+    margin-top: var(--space-8);
+    position: relative;
+}
+
+.progressLine {
+    position: absolute;
+    top: 16px;
+    left: 25%;
+    right: 25%;
+    height: 2px;
+    background: var(--bg-tertiary);
+    z-index: 0;
+}
+
+.progressFill {
+    height: 100%;
+    background: var(--primary);
+    transition: width var(--transition-base);
+}
+
+.progressStep {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    z-index: 1;
+}
+
+.progressDot {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-full);
+    background: var(--bg-tertiary);
+    color: var(--text-dim);
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    transition: all var(--transition-base);
+}
+
+.progressActive .progressDot {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 0 12px var(--primary-glow);
+}
+
+.progressDone .progressDot {
+    background: var(--success);
+    color: white;
+}
+
+.progressStep span {
+    font-size: var(--font-size-xs);
+    color: var(--text-dim);
+    font-weight: 500;
+}
+
+.progressActive span {
+    color: var(--primary-light);
+}
+
+.progressDone span {
+    color: var(--success-light);
+}
+
+/* Form Steps */
+.formStep {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: var(--space-8);
+    margin-bottom: var(--space-6);
+    animation: fadeInUp 0.3s ease;
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-5);
+}
+
+/* Amenities */
+.amenitiesSection {
+    margin-top: var(--space-6);
+}
+
+.amenitiesGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+}
+
+.amenityChip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-4);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all var(--transition-fast);
+}
+
+.amenityChip:hover {
+    border-color: var(--primary);
+    color: var(--primary-light);
+}
+
+.amenityActive {
+    background: rgba(99, 102, 241, 0.1) !important;
+    border-color: var(--primary) !important;
+    color: var(--primary-light) !important;
+}
+
+/* Image Upload */
+.imageUpload {
+    margin-bottom: var(--space-6);
+}
+
+.uploadArea {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-12);
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-xl);
+    cursor: pointer;
+    color: var(--text-dim);
+    transition: all var(--transition-fast);
+}
+
+.uploadArea:hover {
+    border-color: var(--primary);
+    color: var(--primary-light);
+    background: var(--bg-hover);
+}
+
+.uploadArea span {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+}
+
+.uploadHint {
+    font-size: var(--font-size-xs) !important;
+    color: var(--text-dim) !important;
+}
+
+.imagePreviewGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-3);
+}
+
+.imagePreview {
+    position: relative;
+    height: 120px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.imagePreview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.primaryBadge {
+    position: absolute;
+    top: var(--space-2);
+    left: var(--space-2);
+    padding: 2px 8px;
+    background: var(--primary);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: var(--radius-full);
+}
+
+.removeImg {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    border-radius: var(--radius-full);
+    color: white;
+    cursor: pointer;
+}
+
+.removeImg:hover {
+    background: var(--error);
+}
+
+/* Nav */
+.formNav {
+    display: flex;
+    gap: var(--space-4);
+}
+
+@media (max-width: 768px) {
+    .formGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .formGrid>*[style*="grid-column"] {
+        grid-column: span 1 !important;
+    }
+
+    .imagePreviewGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .formStep {
+        padding: var(--space-5);
+    }
+
+    .progress {
+        gap: var(--space-6);
+    }
+}

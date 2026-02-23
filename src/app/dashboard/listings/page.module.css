@@ -1,0 +1,173 @@
+.listingsPage {
+    padding: var(--space-8) 0 var(--space-16);
+}
+
+.pageHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-8);
+}
+
+.pageTitle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-2xl);
+    font-weight: 800;
+}
+
+.pageSubtitle {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    margin-top: var(--space-1);
+}
+
+/* Table */
+.table {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+}
+
+.tableHeader {
+    display: grid;
+    grid-template-columns: 2.5fr 1fr 0.8fr 0.8fr 0.8fr 0.8fr;
+    padding: var(--space-3) var(--space-5);
+    background: var(--bg-tertiary);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tableRow {
+    display: grid;
+    grid-template-columns: 2.5fr 1fr 0.8fr 0.8fr 0.8fr 0.8fr;
+    align-items: center;
+    padding: var(--space-4) var(--space-5);
+    border-top: 1px solid var(--border-color);
+    transition: background var(--transition-fast);
+}
+
+.tableRow:hover {
+    background: var(--bg-hover);
+}
+
+.propertyCell {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.propertyThumb {
+    width: 56px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.propertyName {
+    display: block;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+.propertyName:hover {
+    color: var(--primary-light);
+}
+
+.propertyType {
+    font-size: var(--font-size-xs);
+    color: var(--text-dim);
+    text-transform: capitalize;
+}
+
+.priceCell {
+    font-weight: 700;
+    font-size: var(--font-size-sm);
+    color: var(--primary-light);
+}
+
+.viewsCell {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+}
+
+.dateCell {
+    font-size: var(--font-size-xs);
+    color: var(--text-dim);
+}
+
+.actionsCell {
+    display: flex;
+    gap: var(--space-2);
+}
+
+.actionBtn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    color: var(--text-dim);
+}
+
+.actionBtn:hover {
+    background: var(--bg-hover);
+    border-color: var(--primary);
+}
+
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-16);
+    text-align: center;
+    color: var(--text-dim);
+}
+
+.emptyState h3 {
+    font-size: var(--font-size-xl);
+    color: var(--text-secondary);
+}
+
+.emptyState p {
+    color: var(--text-muted);
+}
+
+@media (max-width: 768px) {
+    .pageHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-4);
+    }
+
+    .tableHeader {
+        display: none;
+    }
+
+    .tableRow {
+        grid-template-columns: 1fr;
+        gap: var(--space-2);
+        padding: var(--space-4);
+    }
+}
