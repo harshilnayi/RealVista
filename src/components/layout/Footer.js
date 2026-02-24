@@ -20,13 +20,13 @@ export default function Footer() {
                             Buy, sell, or rent with confidence.
                         </p>
                         <div className={styles.socials}>
-                            <a href="#" className={styles.socialLink} aria-label="Twitter">
+                            <a href="https://x.com/nayi__harshil" target="_blank" rel="noopener noreferrer" className={styles.socialLink} aria-label="Twitter">
                                 <Twitter size={18} />
                             </a>
-                            <a href="#" className={styles.socialLink} aria-label="LinkedIn">
+                            <a href="https://www.linkedin.com/in/harshilnayi" target="_blank" rel="noopener noreferrer" className={styles.socialLink} aria-label="LinkedIn">
                                 <Linkedin size={18} />
                             </a>
-                            <a href="#" className={styles.socialLink} aria-label="GitHub">
+                            <a href="https://github.com/harshilnayi/RealVista" target="_blank" rel="noopener noreferrer" className={styles.socialLink} aria-label="GitHub">
                                 <Github size={18} />
                             </a>
                         </div>
@@ -53,17 +53,17 @@ export default function Footer() {
                     {/* Contact */}
                     <div className={styles.linkGroup}>
                         <h4 className={styles.linkTitle}>Contact Us</h4>
-                        <a href="mailto:hello@realvista.com" className={styles.contactItem}>
+                        <a href="mailto:harshilnayi115@gmail.com" className={styles.contactItem}>
                             <Mail size={14} />
-                            hello@realvista.com
+                            harshilnayi115@gmail.com
                         </a>
-                        <a href="tel:+911234567890" className={styles.contactItem}>
+                        <a href="tel:+919313164990" className={styles.contactItem}>
                             <Phone size={14} />
-                            +91 123 456 7890
+                            +91 9313164990
                         </a>
                         <span className={styles.contactItem}>
                             <MapPin size={14} />
-                            Mumbai, Maharashtra, India
+                            Rajkot, Gujarat, India
                         </span>
                     </div>
                 </div>

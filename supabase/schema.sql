@@ -2,8 +2,9 @@
 -- RealVista Database Schema
 -- ═══════════════════════════════════════════════
 
--- Enable UUID extension
+-- Enable Extensions
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 -- ── Profiles Table ──────────────────────────────
 -- Extends Supabase auth.users
