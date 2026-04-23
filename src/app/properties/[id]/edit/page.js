@@ -1,15 +1,16 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useEffectEvent, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { useToast } from '@/components/ui/Toast';
 import { PROPERTY_TYPES, LISTING_TYPES, AMENITIES, CITIES } from '@/lib/constants';
 import { Building2, Save, Loader, ArrowLeft, Check, Trash2 } from 'lucide-react';
 import styles from './page.module.css';
 
-export default function EditPropertyPage({ params }) {
-    const { id } = use(params);
+export default function EditPropertyPage() {
+    const params = useParams();
+    const id = Array.isArray(params.id) ? params.id[0] : params.id;
     const router = useRouter();
     const supabase = createClient();
     const toast = useToast();
@@ -23,13 +24,11 @@ export default function EditPropertyPage({ params }) {
         latitude: '', longitude: '', amenities: [],
     });
 
-    useEffect(() => {
-        loadProperty();
-    }, []);
+    const loadProperty = useEffectEvent(async () => {
+        if (!id) return;
 
-    const loadProperty = async () => {
         const { data: { user } } = await supabase.auth.getUser();
-        if (!user) { router.push('/login'); return; }
+        if (!user) { router.push(`/login?redirect=/properties/${id}/edit`); return; }
         setUser(user);
 
         const { data, error } = await supabase
@@ -68,7 +67,11 @@ export default function EditPropertyPage({ params }) {
             amenities: data.amenities || [],
         });
         setLoading(false);
-    };
+    });
+
+    useEffect(() => {
+        loadProperty();
+    }, [id]);
 
     const updateForm = (key, value) => setForm(prev => ({ ...prev, [key]: value }));
 

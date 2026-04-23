@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
@@ -9,8 +9,7 @@ import { PROPERTY_TYPES, LISTING_TYPES, BEDROOM_OPTIONS, SORT_OPTIONS, CITIES } 
 import { formatPrice, formatArea } from '@/lib/utils';
 import {
     Search, MapPin, SlidersHorizontal, X, Bed, Bath, Maximize,
-    Heart, ChevronDown, Grid3X3, List, Building2, ArrowRight,
-    Plus, ArrowUpDown
+    Heart, Grid3X3, List, Building2, Plus,
 } from 'lucide-react';
 import styles from './page.module.css';
 
@@ -37,11 +36,7 @@ function PropertiesContent() {
         sort: 'newest',
     });
 
-    useEffect(() => {
-        loadProperties();
-    }, [filters]);
-
-    const loadProperties = async () => {
+    const loadProperties = useEffectEvent(async () => {
         setLoading(true);
         let query = supabase
             .from('properties')
@@ -74,7 +69,11 @@ function PropertiesContent() {
         setProperties(data || []);
         setTotalCount(count || 0);
         setLoading(false);
-    };
+    });
+
+    useEffect(() => {
+        loadProperties();
+    }, [filters]);
 
     const updateFilter = (key, value) => {
         setFilters(prev => ({ ...prev, [key]: value }));

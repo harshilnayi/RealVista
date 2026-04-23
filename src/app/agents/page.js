@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { CITIES } from '@/lib/constants';
-import { Users, MapPin, Phone, Mail, Building2, Search, Star, Briefcase, Loader } from 'lucide-react';
+import { Users, MapPin, Phone, Mail, Building2, Search, Loader } from 'lucide-react';
 import styles from './page.module.css';
 
 export default function AgentsPage() {
@@ -13,12 +13,9 @@ export default function AgentsPage() {
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
     const [cityFilter, setCityFilter] = useState('');
+    const [listingCounts, setListingCounts] = useState({});
 
-    useEffect(() => {
-        loadAgents();
-    }, []);
-
-    const loadAgents = async () => {
+    const loadAgents = useEffectEvent(async () => {
         const { data } = await supabase
             .from('profiles')
             .select('id, full_name, email, phone, avatar_url, bio, city, role, created_at')
@@ -27,7 +24,11 @@ export default function AgentsPage() {
 
         setAgents(data || []);
         setLoading(false);
-    };
+    });
+
+    useEffect(() => {
+        loadAgents();
+    }, []);
 
     const filtered = agents.filter(agent => {
         const matchSearch = !search ||
@@ -37,23 +38,25 @@ export default function AgentsPage() {
         return matchSearch && matchCity;
     });
 
-    // Count listings per agent
-    const [listingCounts, setListingCounts] = useState({});
+    const loadListingCounts = useEffectEvent(async (currentAgents) => {
+        const counts = await Promise.all(
+            currentAgents.map(async (agent) => {
+                const { count } = await supabase
+                    .from('properties')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('owner_id', agent.id)
+                    .eq('status', 'active');
+
+                return [agent.id, count || 0];
+            })
+        );
+
+        setListingCounts(Object.fromEntries(counts));
+    });
+
     useEffect(() => {
         if (agents.length > 0) {
-            const fetchCounts = async () => {
-                const counts = {};
-                for (const agent of agents) {
-                    const { count } = await supabase
-                        .from('properties')
-                        .select('*', { count: 'exact', head: true })
-                        .eq('owner_id', agent.id)
-                        .eq('status', 'active');
-                    counts[agent.id] = count || 0;
-                }
-                setListingCounts(counts);
-            };
-            fetchCounts();
+            loadListingCounts(agents);
         }
     }, [agents]);
 

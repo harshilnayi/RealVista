@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { formatPrice, timeAgo } from '@/lib/utils';
 import {
-    Building2, Plus, Edit, Trash2, Eye, MoreVertical, Loader,
+    Building2, Plus, Edit, Trash2, Eye, Loader,
     ToggleLeft, ToggleRight,
 } from 'lucide-react';
 import styles from './page.module.css';
@@ -17,11 +17,7 @@ export default function MyListingsPage() {
     const [listings, setListings] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        loadListings();
-    }, []);
-
-    const loadListings = async () => {
+    const loadListings = useEffectEvent(async () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) { router.push('/login'); return; }
 
@@ -33,7 +29,11 @@ export default function MyListingsPage() {
 
         setListings(data || []);
         setLoading(false);
-    };
+    });
+
+    useEffect(() => {
+        loadListings();
+    }, []);
 
     const toggleStatus = async (id, currentStatus) => {
         const newStatus = currentStatus === 'active' ? 'inactive' : 'active';

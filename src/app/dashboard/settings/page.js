@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { useToast } from '@/components/ui/Toast';
-import { User, Mail, Phone, MapPin, Save, Camera, Loader, LogOut, Shield } from 'lucide-react';
+import { User, Mail, Phone, MapPin, Save, Loader, LogOut, Shield } from 'lucide-react';
 import styles from './page.module.css';
 
 export default function SettingsPage() {
@@ -18,11 +18,7 @@ export default function SettingsPage() {
         full_name: '', phone: '', bio: '', city: '', avatar_url: '',
     });
 
-    useEffect(() => {
-        loadProfile();
-    }, []);
-
-    const loadProfile = async () => {
+    const loadProfile = useEffectEvent(async () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) { router.push('/login'); return; }
         setUser(user);
@@ -43,7 +39,11 @@ export default function SettingsPage() {
             });
         }
         setLoading(false);
-    };
+    });
+
+    useEffect(() => {
+        loadProfile();
+    }, []);
 
     const handleSave = async (e) => {
         e.preventDefault();

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
@@ -14,11 +14,7 @@ export default function FavoritesPage() {
     const [favorites, setFavorites] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        loadFavorites();
-    }, []);
-
-    const loadFavorites = async () => {
+    const loadFavorites = useEffectEvent(async () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) { router.push('/login?redirect=/dashboard/favorites'); return; }
 
@@ -30,7 +26,11 @@ export default function FavoritesPage() {
 
         setFavorites(data || []);
         setLoading(false);
-    };
+    });
+
+    useEffect(() => {
+        loadFavorites();
+    }, []);
 
     const removeFavorite = async (favId) => {
         await supabase.from('favorites').delete().eq('id', favId);

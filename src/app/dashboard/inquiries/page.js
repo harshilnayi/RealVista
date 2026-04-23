@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { timeAgo } from '@/lib/utils';
-import { MessageSquare, Check, Clock, ArrowRight, User, Building2, Loader, Mail, Phone } from 'lucide-react';
+import { MessageSquare, Check, Building2, Loader, Mail, Phone } from 'lucide-react';
 import styles from './page.module.css';
 
 export default function InquiriesPage() {
@@ -16,23 +16,17 @@ export default function InquiriesPage() {
     const [tab, setTab] = useState('received');
     const [userId, setUserId] = useState(null);
 
-    useEffect(() => {
-        loadInquiries();
-    }, []);
-
-    const loadInquiries = async () => {
+    const loadInquiries = useEffectEvent(async () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) { router.push('/login'); return; }
         setUserId(user.id);
 
-        // Received inquiries
         const { data: received } = await supabase
             .from('inquiries')
             .select('*, profiles!inquiries_sender_id_fkey(full_name, email, avatar_url), properties(id, title)')
             .eq('receiver_id', user.id)
             .order('created_at', { ascending: false });
 
-        // Sent inquiries
         const { data: sent } = await supabase
             .from('inquiries')
             .select('*, profiles!inquiries_receiver_id_fkey(full_name, email), properties(id, title)')
@@ -41,7 +35,11 @@ export default function InquiriesPage() {
 
         setInquiries({ received: received || [], sent: sent || [] });
         setLoading(false);
-    };
+    });
+
+    useEffect(() => {
+        loadInquiries();
+    }, []);
 
     const markAsRead = async (id) => {
         await supabase.from('inquiries').update({ status: 'read' }).eq('id', id);

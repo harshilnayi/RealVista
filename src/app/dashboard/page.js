@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
@@ -22,20 +22,14 @@ export default function DashboardPage() {
     const [recentInquiries, setRecentInquiries] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        loadDashboard();
-    }, []);
-
-    const loadDashboard = async () => {
+    const loadDashboard = useEffectEvent(async () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) { router.push('/login'); return; }
         setUser(user);
 
-        // Load profile
         const { data: prof } = await supabase.from('profiles').select('*').eq('id', user.id).single();
         setProfile(prof);
 
-        // Load stats
         const { count: listingCount } = await supabase
             .from('properties').select('*', { count: 'exact', head: true }).eq('owner_id', user.id);
 
@@ -57,7 +51,6 @@ export default function DashboardPage() {
             views: totalViews,
         });
 
-        // Recent listings
         const { data: listings } = await supabase
             .from('properties')
             .select('id, title, price, status, views_count, listing_type, created_at')
@@ -66,7 +59,6 @@ export default function DashboardPage() {
             .limit(5);
         setRecentListings(listings || []);
 
-        // Recent inquiries
         const { data: inquiries } = await supabase
             .from('inquiries')
             .select('*, profiles!inquiries_sender_id_fkey(full_name), properties(title)')
@@ -76,7 +68,11 @@ export default function DashboardPage() {
         setRecentInquiries(inquiries || []);
 
         setLoading(false);
-    };
+    });
+
+    useEffect(() => {
+        loadDashboard();
+    }, []);
 
     if (loading) {
         return (

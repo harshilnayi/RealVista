@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { PLATFORM_STATS, PROPERTY_TYPES, CITIES } from '@/lib/constants';
@@ -37,11 +37,7 @@ export default function HomePage() {
   const [searchType, setSearchType] = useState('sale');
   const supabase = createClient();
 
-  useEffect(() => {
-    loadFeatured();
-  }, []);
-
-  const loadFeatured = async () => {
+  const loadFeatured = useEffectEvent(async () => {
     const { data } = await supabase
       .from('properties')
       .select('*, property_images(*), profiles(full_name, avatar_url)')
@@ -50,7 +46,11 @@ export default function HomePage() {
       .limit(6);
 
     if (data) setFeaturedProperties(data);
-  };
+  });
+
+  useEffect(() => {
+    loadFeatured();
+  }, []);
 
   return (
     <div className={styles.home}>

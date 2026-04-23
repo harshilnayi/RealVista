@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { formatPrice } from '@/lib/utils';
@@ -14,11 +14,7 @@ export default function MapPage() {
     const [selectedProperty, setSelectedProperty] = useState(null);
     const [mapLoaded, setMapLoaded] = useState(false);
 
-    useEffect(() => {
-        loadProperties();
-    }, []);
-
-    const loadProperties = async () => {
+    const loadProperties = useEffectEvent(async () => {
         const { data } = await supabase
             .from('properties')
             .select('id, title, price, listing_type, property_type, city, state, address, latitude, longitude, bedrooms, bathrooms, area_sqft, property_images(image_url, is_primary)')
@@ -29,7 +25,11 @@ export default function MapPage() {
 
         setProperties(data || []);
         setLoading(false);
-    };
+    });
+
+    useEffect(() => {
+        loadProperties();
+    }, []);
 
     // Dynamic import of Leaflet map (client-only)
     useEffect(() => {

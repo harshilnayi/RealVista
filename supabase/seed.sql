@@ -13,31 +13,47 @@
 -- ============================================================
 -- Password for all demo users: Demo@12345
 
-INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_user_meta_data, created_at, updated_at)
+INSERT INTO auth.users (
+  id,
+  instance_id,
+  aud,
+  role,
+  email,
+  encrypted_password,
+  email_confirmed_at,
+  raw_app_meta_data,
+  raw_user_meta_data,
+  confirmation_token,
+  email_change,
+  email_change_token_new,
+  recovery_token,
+  created_at,
+  updated_at
+)
 VALUES
   ('a1000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
    'rajesh.sharma@realvista.demo', crypt('Demo@12345', gen_salt('bf')), NOW(),
-   '{"full_name": "Rajesh Sharma", "role": "agent"}'::jsonb, NOW(), NOW()),
+   '{"provider":"email","providers":["email"]}'::jsonb, '{"full_name": "Rajesh Sharma", "role": "agent"}'::jsonb, '', '', '', '', NOW(), NOW()),
 
   ('a1000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
    'priya.mehta@realvista.demo', crypt('Demo@12345', gen_salt('bf')), NOW(),
-   '{"full_name": "Priya Mehta", "role": "agent"}'::jsonb, NOW(), NOW()),
+   '{"provider":"email","providers":["email"]}'::jsonb, '{"full_name": "Priya Mehta", "role": "agent"}'::jsonb, '', '', '', '', NOW(), NOW()),
 
   ('a1000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
    'amit.patel@realvista.demo', crypt('Demo@12345', gen_salt('bf')), NOW(),
-   '{"full_name": "Amit Patel", "role": "seller"}'::jsonb, NOW(), NOW()),
+   '{"provider":"email","providers":["email"]}'::jsonb, '{"full_name": "Amit Patel", "role": "seller"}'::jsonb, '', '', '', '', NOW(), NOW()),
 
   ('a1000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
    'sneha.iyer@realvista.demo', crypt('Demo@12345', gen_salt('bf')), NOW(),
-   '{"full_name": "Sneha Iyer", "role": "seller"}'::jsonb, NOW(), NOW()),
+   '{"provider":"email","providers":["email"]}'::jsonb, '{"full_name": "Sneha Iyer", "role": "seller"}'::jsonb, '', '', '', '', NOW(), NOW()),
 
   ('a1000000-0000-0000-0000-000000000005', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
    'vikram.singh@realvista.demo', crypt('Demo@12345', gen_salt('bf')), NOW(),
-   '{"full_name": "Vikram Singh", "role": "buyer"}'::jsonb, NOW(), NOW()),
+   '{"provider":"email","providers":["email"]}'::jsonb, '{"full_name": "Vikram Singh", "role": "buyer"}'::jsonb, '', '', '', '', NOW(), NOW()),
 
   ('a1000000-0000-0000-0000-000000000006', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
    'ananya.reddy@realvista.demo', crypt('Demo@12345', gen_salt('bf')), NOW(),
-   '{"full_name": "Ananya Reddy", "role": "buyer"}'::jsonb, NOW(), NOW())
+   '{"provider":"email","providers":["email"]}'::jsonb, '{"full_name": "Ananya Reddy", "role": "buyer"}'::jsonb, '', '', '', '', NOW(), NOW())
 ON CONFLICT (id) DO NOTHING;
 
 -- Also create auth identities (required for login to work)

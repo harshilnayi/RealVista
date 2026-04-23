@@ -7,6 +7,14 @@ import { createClient } from '@/lib/supabase/client';
 import { LogIn, Mail, Lock, Eye, EyeOff, Building2, ArrowRight } from 'lucide-react';
 import styles from './page.module.css';
 
+function getAuthErrorMessage(error, fallback) {
+    if (!error?.message) return fallback;
+    if (error.message.includes('Database error')) {
+        return 'Supabase auth is misconfigured right now. Re-run the SQL setup before trying again.';
+    }
+    return error.message;
+}
+
 function LoginForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -33,7 +41,7 @@ function LoginForm() {
             router.push(redirect);
             router.refresh();
         } catch (err) {
-            setError(err.message || 'Failed to sign in');
+            setError(getAuthErrorMessage(err, 'Failed to sign in'));
         } finally {
             setLoading(false);
         }

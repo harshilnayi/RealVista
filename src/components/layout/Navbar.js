@@ -1,12 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { NAV_LINKS } from '@/lib/constants';
 import {
-    Home,
     Menu,
     X,
     User,
@@ -26,41 +25,48 @@ export default function Navbar() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const pathname = usePathname();
+    const router = useRouter();
     const supabase = createClient();
+
+    const closeMenus = () => {
+        setMobileOpen(false);
+        setDropdownOpen(false);
+    };
+
+    const syncUserState = useEffectEvent(async (nextUser) => {
+        setUser(nextUser);
+
+        if (!nextUser) {
+            setProfile(null);
+            return;
+        }
+
+        const { data } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', nextUser.id)
+            .single();
+
+        setProfile(data);
+    });
 
     useEffect(() => {
         const getUser = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            setUser(user);
-            if (user) {
-                const { data } = await supabase
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', user.id)
-                    .single();
-                setProfile(data);
-            }
+            const {
+                data: { user: currentUser },
+            } = await supabase.auth.getUser();
+            await syncUserState(currentUser);
         };
         getUser();
 
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
-            async (event, session) => {
-                setUser(session?.user ?? null);
-                if (session?.user) {
-                    const { data } = await supabase
-                        .from('profiles')
-                        .select('*')
-                        .eq('id', session.user.id)
-                        .single();
-                    setProfile(data);
-                } else {
-                    setProfile(null);
-                }
+            async (_event, session) => {
+                await syncUserState(session?.user ?? null);
             }
         );
 
         return () => subscription.unsubscribe();
-    }, []);
+    }, [supabase]);
 
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -68,24 +74,20 @@ export default function Navbar() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    useEffect(() => {
-        setMobileOpen(false);
-        setDropdownOpen(false);
-    }, [pathname]);
-
     const handleLogout = async () => {
         await supabase.auth.signOut();
         setUser(null);
         setProfile(null);
-        setDropdownOpen(false);
-        window.location.href = '/';
+        closeMenus();
+        router.push('/');
+        router.refresh();
     };
 
     return (
         <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ''}`}>
             <div className={`container ${styles.navContainer}`}>
                 {/* Logo */}
-                <Link href="/" className={styles.logo}>
+                <Link href="/" className={styles.logo} onClick={closeMenus}>
                     <Building2 size={28} />
                     <span>Real<strong>Vista</strong></span>
                 </Link>
@@ -96,6 +98,7 @@ export default function Navbar() {
                         <Link
                             key={link.href}
                             href={link.href}
+                            onClick={closeMenus}
                             className={`${styles.navLink} ${pathname === link.href ? styles.active : ''}`}
                         >
                             {link.label}
@@ -129,15 +132,15 @@ export default function Navbar() {
                                         <p className={styles.dropdownRole}>{profile?.role}</p>
                                     </div>
                                     <div className={styles.dropdownDivider} />
-                                    <Link href="/dashboard" className={styles.dropdownItem}>
+                                    <Link href="/dashboard" className={styles.dropdownItem} onClick={closeMenus}>
                                         <LayoutDashboard size={16} />
                                         Dashboard
                                     </Link>
-                                    <Link href="/dashboard/listings" className={styles.dropdownItem}>
+                                    <Link href="/dashboard/listings" className={styles.dropdownItem} onClick={closeMenus}>
                                         <Building2 size={16} />
                                         My Listings
                                     </Link>
-                                    <Link href="/dashboard" className={styles.dropdownItem}>
+                                    <Link href="/dashboard/settings" className={styles.dropdownItem} onClick={closeMenus}>
                                         <User size={16} />
                                         Profile
                                     </Link>
@@ -151,11 +154,11 @@ export default function Navbar() {
                         </div>
                     ) : (
                         <div className={styles.authButtons}>
-                            <Link href="/login" className="btn btn-ghost btn-sm">
+                            <Link href="/login" className="btn btn-ghost btn-sm" onClick={closeMenus}>
                                 <LogIn size={16} />
                                 Sign In
                             </Link>
-                            <Link href="/register" className="btn btn-primary btn-sm">
+                            <Link href="/register" className="btn btn-primary btn-sm" onClick={closeMenus}>
                                 <UserPlus size={16} />
                                 Sign Up
                             </Link>
@@ -180,6 +183,7 @@ export default function Navbar() {
                         <Link
                             key={link.href}
                             href={link.href}
+                            onClick={closeMenus}
                             className={`${styles.mobileLink} ${pathname === link.href ? styles.active : ''}`}
                         >
                             {link.label}
@@ -188,7 +192,7 @@ export default function Navbar() {
                     <div className={styles.dropdownDivider} />
                     {user ? (
                         <>
-                            <Link href="/dashboard" className={styles.mobileLink}>
+                            <Link href="/dashboard" className={styles.mobileLink} onClick={closeMenus}>
                                 <LayoutDashboard size={18} /> Dashboard
                             </Link>
                             <button onClick={handleLogout} className={styles.mobileLink}>
@@ -197,10 +201,10 @@ export default function Navbar() {
                         </>
                     ) : (
                         <>
-                            <Link href="/login" className={styles.mobileLink}>
+                            <Link href="/login" className={styles.mobileLink} onClick={closeMenus}>
                                 <LogIn size={18} /> Sign In
                             </Link>
-                            <Link href="/register" className={styles.mobileLink}>
+                            <Link href="/register" className={styles.mobileLink} onClick={closeMenus}>
                                 <UserPlus size={18} /> Sign Up
                             </Link>
                         </>

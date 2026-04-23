@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { PROPERTY_TYPES, LISTING_TYPES, AMENITIES, CITIES } from '@/lib/constants';
 import {
-    Building2, ImagePlus, X, Upload, MapPin, DollarSign, ArrowRight, ArrowLeft, Check, Loader,
+    Building2, X, Upload, ArrowRight, ArrowLeft, Check, Loader,
 } from 'lucide-react';
 import styles from './page.module.css';
 
@@ -23,13 +23,14 @@ export default function NewPropertyPage() {
         latitude: '', longitude: '', amenities: [],
     });
 
+    const loadUser = useEffectEvent(async () => {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) { router.push('/login?redirect=/properties/new'); return; }
+        setUser(user);
+    });
+
     useEffect(() => {
-        const getUser = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) { router.push('/login?redirect=/properties/new'); return; }
-            setUser(user);
-        };
-        getUser();
+        loadUser();
     }, []);
 
     const updateForm = (key, value) => setForm(prev => ({ ...prev, [key]: value }));

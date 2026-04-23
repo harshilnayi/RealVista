@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse } from 'next/server';
 
-export async function middleware(request) {
+export async function proxy(request) {
     let supabaseResponse = NextResponse.next({
         request,
     });
@@ -36,9 +36,10 @@ export async function middleware(request) {
 
     // Protected routes - redirect to login if not authenticated
     const protectedPaths = ['/dashboard', '/properties/new'];
+    const isPropertyEditPath = /^\/properties\/[^/]+\/edit\/?$/.test(request.nextUrl.pathname);
     const isProtectedPath = protectedPaths.some((path) =>
         request.nextUrl.pathname.startsWith(path)
-    );
+    ) || isPropertyEditPath;
 
     if (isProtectedPath && !user) {
         const url = request.nextUrl.clone();

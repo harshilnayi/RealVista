@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
@@ -8,12 +8,13 @@ import { formatPrice, formatArea, timeAgo, getPropertyTypeLabel, getStatusColor 
 import {
     MapPin, Bed, Bath, Maximize, Calendar, Eye, Heart, Share2,
     ChevronLeft, ChevronRight, Building2, User, Phone, Mail,
-    Send, X, Check, ArrowLeft, Bookmark, Home, Pencil,
+    Send, X, Check, ArrowLeft, Pencil,
 } from 'lucide-react';
 import styles from './page.module.css';
 
 export default function PropertyDetailPage() {
-    const { id } = useParams();
+    const params = useParams();
+    const id = Array.isArray(params.id) ? params.id[0] : params.id;
     const supabase = createClient();
     const [property, setProperty] = useState(null);
     const [owner, setOwner] = useState(null);
@@ -26,15 +27,10 @@ export default function PropertyDetailPage() {
     const [inquirySent, setInquirySent] = useState(false);
     const [showGallery, setShowGallery] = useState(false);
 
-    useEffect(() => {
-        loadProperty();
-        loadUser();
-    }, [id]);
-
-    const loadUser = async () => {
+    const loadUser = useEffectEvent(async () => {
         const { data: { user } } = await supabase.auth.getUser();
         setUser(user);
-        if (user) {
+        if (user && id) {
             const { data } = await supabase
                 .from('favorites')
                 .select('id')
@@ -43,9 +39,11 @@ export default function PropertyDetailPage() {
                 .single();
             setIsFav(!!data);
         }
-    };
+    });
 
-    const loadProperty = async () => {
+    const loadProperty = useEffectEvent(async () => {
+        if (!id) return;
+
         const { data } = await supabase
             .from('properties')
             .select('*, property_images(*), profiles(id, full_name, email, phone, avatar_url, role, bio, city)')
@@ -58,11 +56,16 @@ export default function PropertyDetailPage() {
             setImages(
                 data.property_images?.sort((a, b) => a.display_order - b.display_order) || []
             );
-            // Increment views
             supabase.from('properties').update({ views_count: (data.views_count || 0) + 1 }).eq('id', id).then();
         }
         setLoading(false);
-    };
+    });
+
+    useEffect(() => {
+        if (!id) return;
+        loadProperty();
+        loadUser();
+    }, [id]);
 
     const toggleFavorite = async () => {
         if (!user) return;

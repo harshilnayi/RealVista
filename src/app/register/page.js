@@ -17,6 +17,14 @@ const ROLE_ICONS = {
     agent: <Briefcase size={20} />,
 };
 
+function getAuthErrorMessage(error, fallback) {
+    if (!error?.message) return fallback;
+    if (error.message.includes('Database error')) {
+        return 'Supabase auth is misconfigured right now. Re-run the SQL setup before trying again.';
+    }
+    return error.message;
+}
+
 export default function RegisterPage() {
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
@@ -26,6 +34,7 @@ export default function RegisterPage() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [successMessage, setSuccessMessage] = useState('');
     const router = useRouter();
     const supabase = createClient();
 
@@ -41,7 +50,7 @@ export default function RegisterPage() {
         }
 
         try {
-            const { error } = await supabase.auth.signUp({
+            const { data, error } = await supabase.auth.signUp({
                 email,
                 password,
                 options: {
@@ -54,13 +63,18 @@ export default function RegisterPage() {
 
             if (error) throw error;
 
+            if (data.session) {
+                setSuccessMessage('Welcome to RealVista! Redirecting you to your dashboard...');
+            } else {
+                setSuccessMessage('Account created. Please confirm your email, then sign in.');
+            }
             setSuccess(true);
             setTimeout(() => {
-                router.push('/dashboard');
+                router.push(data.session ? '/dashboard' : '/login');
                 router.refresh();
             }, 1500);
         } catch (err) {
-            setError(err.message || 'Failed to create account');
+            setError(getAuthErrorMessage(err, 'Failed to create account'));
         } finally {
             setLoading(false);
         }
@@ -80,7 +94,7 @@ export default function RegisterPage() {
                         </div>
                         <h1 className={styles.authTitle}>Account Created! 🎉</h1>
                         <p className={styles.authSubtitle}>
-                            Welcome to RealVista! Redirecting you to your dashboard...
+                            {successMessage}
                         </p>
                     </div>
                 </div>

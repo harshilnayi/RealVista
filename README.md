@@ -52,11 +52,14 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 ```
 
-4. Run the SQL schema in Supabase SQL Editor:
+4. Run the SQL files in Supabase SQL Editor:
 
 ```bash
-# Copy contents of supabase/schema.sql and run in Supabase Dashboard → SQL Editor
+# 1) Run supabase/schema.sql
+# 2) Run supabase/seed.sql for demo data and demo logins
 ```
+
+If auth is already broken in an older project, run `supabase/repair_auth.sql` once to repair the signup trigger and demo auth records.
 
 ### 3. Run
 
@@ -65,6 +68,13 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000)
+
+Demo login after seeding:
+
+```text
+Email: vikram.singh@realvista.demo
+Password: Demo@12345
+```
 
 ## 📁 Project Structure
 
