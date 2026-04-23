@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useEffectEvent, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
@@ -18,6 +18,7 @@ function PropertiesContent() {
     const supabase = createClient();
     const [properties, setProperties] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
     const [showFilters, setShowFilters] = useState(false);
     const [viewMode, setViewMode] = useState('grid');
     const [totalCount, setTotalCount] = useState(0);
@@ -36,44 +37,70 @@ function PropertiesContent() {
         sort: 'newest',
     });
 
-    const loadProperties = useEffectEvent(async () => {
-        setLoading(true);
-        let query = supabase
-            .from('properties')
-            .select('*, property_images(*), profiles(full_name, avatar_url)', { count: 'exact' })
-            .eq('status', 'active');
-
-        if (filters.search) {
-            query = query.or(`title.ilike.%${filters.search}%,address.ilike.%${filters.search}%,city.ilike.%${filters.search}%`);
-        }
-        if (filters.city) query = query.ilike('city', `%${filters.city}%`);
-        if (filters.listing_type) query = query.eq('listing_type', filters.listing_type);
-        if (filters.property_type) query = query.eq('property_type', filters.property_type);
-        if (filters.bedrooms) query = query.gte('bedrooms', parseInt(filters.bedrooms));
-        if (filters.min_price) query = query.gte('price', parseFloat(filters.min_price));
-        if (filters.max_price) query = query.lte('price', parseFloat(filters.max_price));
-        if (filters.min_area) query = query.gte('area_sqft', parseFloat(filters.min_area));
-        if (filters.max_area) query = query.lte('area_sqft', parseFloat(filters.max_area));
-
-        // Sort
-        switch (filters.sort) {
-            case 'newest': query = query.order('created_at', { ascending: false }); break;
-            case 'oldest': query = query.order('created_at', { ascending: true }); break;
-            case 'price_low': query = query.order('price', { ascending: true }); break;
-            case 'price_high': query = query.order('price', { ascending: false }); break;
-            case 'area_low': query = query.order('area_sqft', { ascending: true }); break;
-            case 'area_high': query = query.order('area_sqft', { ascending: false }); break;
-        }
-
-        const { data, count } = await query.limit(24);
-        setProperties(data || []);
-        setTotalCount(count || 0);
-        setLoading(false);
-    });
-
     useEffect(() => {
+        let isCancelled = false;
+
+        const loadProperties = async () => {
+            setLoading(true);
+            setError('');
+
+            try {
+                let query = supabase
+                    .from('properties')
+                    .select('*, property_images(*), profiles(full_name, avatar_url)', { count: 'exact' })
+                    .eq('status', 'active');
+
+                if (filters.search) {
+                    query = query.or(`title.ilike.%${filters.search}%,address.ilike.%${filters.search}%,city.ilike.%${filters.search}%`);
+                }
+                if (filters.city) query = query.ilike('city', `%${filters.city}%`);
+                if (filters.listing_type) query = query.eq('listing_type', filters.listing_type);
+                if (filters.property_type) query = query.eq('property_type', filters.property_type);
+                if (filters.bedrooms) query = query.gte('bedrooms', parseInt(filters.bedrooms));
+                if (filters.min_price) query = query.gte('price', parseFloat(filters.min_price));
+                if (filters.max_price) query = query.lte('price', parseFloat(filters.max_price));
+                if (filters.min_area) query = query.gte('area_sqft', parseFloat(filters.min_area));
+                if (filters.max_area) query = query.lte('area_sqft', parseFloat(filters.max_area));
+
+                switch (filters.sort) {
+                    case 'newest': query = query.order('created_at', { ascending: false }); break;
+                    case 'oldest': query = query.order('created_at', { ascending: true }); break;
+                    case 'price_low': query = query.order('price', { ascending: true }); break;
+                    case 'price_high': query = query.order('price', { ascending: false }); break;
+                    case 'area_low': query = query.order('area_sqft', { ascending: true }); break;
+                    case 'area_high': query = query.order('area_sqft', { ascending: false }); break;
+                }
+
+                const { data, count, error } = await query.limit(24);
+
+                if (error) {
+                    throw error;
+                }
+
+                if (!isCancelled) {
+                    setProperties(data || []);
+                    setTotalCount(count || 0);
+                }
+            } catch (err) {
+                if (!isCancelled) {
+                    console.error('Failed to load properties:', err);
+                    setProperties([]);
+                    setTotalCount(0);
+                    setError(err.message || 'Failed to load properties.');
+                }
+            } finally {
+                if (!isCancelled) {
+                    setLoading(false);
+                }
+            }
+        };
+
         loadProperties();
-    }, [filters]);
+
+        return () => {
+            isCancelled = true;
+        };
+    }, [filters, supabase]);
 
     const updateFilter = (key, value) => {
         setFilters(prev => ({ ...prev, [key]: value }));
@@ -264,6 +291,15 @@ function PropertiesContent() {
                                 </div>
                             </div>
                         ))}
+                    </div>
+                ) : error ? (
+                    <div className={styles.emptyState}>
+                        <Building2 size={56} />
+                        <h3>Couldn&apos;t load properties</h3>
+                        <p>{error}</p>
+                        <button className="btn btn-primary" onClick={() => setFilters(prev => ({ ...prev }))}>
+                            Try Again
+                        </button>
                     </div>
                 ) : properties.length > 0 ? (
                     <div className={viewMode === 'grid' ? styles.propertyGrid : styles.propertyList}>
